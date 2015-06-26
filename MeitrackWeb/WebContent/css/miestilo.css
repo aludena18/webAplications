@@ -1,0 +1,24 @@
+
+p.titulo {
+	font-family: "Arial";
+	font-size: 20px;
+	color: #039;
+}
+
+p.parrafo {
+	font-family: "Lucida Sans Unicode";
+	font-size: 14px;
+	color: #039;
+}
+
+h1 {
+	font-family: "Lucida Sans Unicode";
+	font-size: 14px;
+	color: #039;
+}
+
+h2 {
+	font-family: "Lucida Sans Unicode";
+	font-size: 14px;
+	color: green;
+}

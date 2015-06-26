@@ -1,0 +1,64 @@
+<%@page import="com.aludena.mtk.getset.DatosTramaGetSet"%>
+<%@page import="java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Insert title here</title>
+	<script type="text/javascript">
+		function consultar() {
+			var formaMain = document.getElementById("formaMain");
+			var accion = document.getElementById("accion");
+			formaMain.action = "consultaServlet.alg";
+			accion.value = "consulta";
+			formaMain.submit();
+		}
+	</script>
+</head>
+
+<body>
+	<form action="" name="formaMain" id="formaMain" method="post">
+	<input type="hidden" name="accion" id="accion">
+	<p>
+		Bienvenido <%=request.getAttribute("datosLogin") %>
+	</p>
+	<p align="center">
+		IMEI : 
+		<input type="text" name="imei" id="imei">
+		<input type="button" value="Consultar" onclick="consultar()">
+	</p>
+	<table align="center">
+		<tr>
+			<th>IMEI</th>
+			<th>NUMERO DE EVENTO</th>
+			<th>LATITUD</th>
+			<th>LONGITUD</th>
+			<th>FECHA Y HORA</th>
+			<th>VELOCIDAD</th>
+			<th>MAPA</th>
+		</tr>
+		
+		<%
+		ArrayList<DatosTramaGetSet> lista = (ArrayList<DatosTramaGetSet>) session.getAttribute("listaDatosTrama");
+		for(DatosTramaGetSet obj : lista){
+		%>
+			<tr>
+				<td align="center"><%=obj.getImei()%></td>
+				<td align="center"><%=obj.getEvent_code()%></td>
+				<td align="center"><%=obj.getLatitude()%></td>
+				<td align="center"><%=obj.getLongitude()%></td>
+				<td align="center"><%=obj.getFecha_hora()%></td>
+				<td align="center"><%=obj.getVelocidad()%></td>
+				<td><a href="mapa.html">Ver Mapa</a></td>
+			</tr>	
+		<%
+		}
+		%>
+	</table>
+	
+	</form>
+</body>
+</html>

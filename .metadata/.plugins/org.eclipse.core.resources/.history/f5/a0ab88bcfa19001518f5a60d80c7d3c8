@@ -1,0 +1,146 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="com.aludena.mtkweb.getset.DatosTramaGetSet"%>
+<%@page import="java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Insert title here</title>
+	
+	<link rel="stylesheet" type="text/css" href="css/estilotabla.css">
+  	<link rel="stylesheet" type="text/css" href="css/miestilo.css">
+  	
+  	<link rel="stylesheet" href="widgets/datepicker/jquery-ui.css">
+ 	<script src="widgets/datepicker/jquery.js"></script>
+  	<script src="widgets/datepicker/jquery-ui.js"></script>
+  	<script>
+  		$(function() {
+    		$( "#datepicker" ).datepicker();
+    		$( "#datepicker2" ).datepicker();
+  		});
+  	</script>
+		
+	<script type="text/javascript">
+		function consultar() {
+			var imei = document.getElementById("imei");
+			if(imei.value == ''){
+				alert("Debe ingresar el numero IMEI a consultar");
+				imei.focus();
+			}
+			else {
+				var formaMain = document.getElementById("formaMain");
+				var accion = document.getElementById("accion");
+				accion.value = "consultar";
+				formaMain.action = "consultaServlet.alg";
+				formaMain.submit();
+			}
+		}
+		
+		function ubicar(latitud,longitud,fecha,velocidad) {
+			var formaMain = document.getElementById("formaMain");
+			var lat = document.getElementById("lat");
+			var lon = document.getElementById("lon");
+			var fec = document.getElementById("fec");
+			var vel = document.getElementById("vel");
+			lat.value = latitud;
+			lon.value = longitud;
+			fec.value = fecha;
+			vel.value = velocidad;
+			formaMain.action = "mapaServlet.alg";
+			formaMain.submit();
+		}
+		
+		function ruta() {
+			var formaMain = document.getElementById("formaMain");
+			formaMain.action = "rutaMapa.jsp";
+			formaMain.submit();
+		}
+	</script>
+</head>
+
+<body>
+<form action="" method="post" name="formaMain" id="formaMain">
+	
+	<p>
+		<input type="hidden" name="accion" id="accion">
+		<input type="hidden" name="lat" id="lat">
+		<input type="hidden" name="lon" id="lon">
+		<input type="hidden" name="fec" id="fec">
+		<input type="hidden" name="vel" id="vel">
+		<input type="hidden" name="listaRuta" id="listaRuta">	
+	</p>
+	
+	<p align="center" class="titulo">MONITOREO DE VEHICULOS</p>
+	<p align="center">
+		IMEI : 
+		<input type="text" name="imei" id="imei">
+		<input type="button" value="Consultar" onclick="consultar()">
+	</p>
+	<p class="parrafo">Usuario Logeado</p>
+	<h1>Desde : <input type="text" name="datepicker" id="datepicker"></h1>
+	<h2>Hasta : <input type="text" name="datepicker2" id="datepicker2"></h2>
+	<p><input type="button" value="Ruta" onclick="ruta()"></p>
+	
+	<table align="center" class="mitabla">
+		<tr>
+			<th>ITEM</th>
+			<th>IMEI</th>
+			<th>COMANDO</th>
+			<th>EVENTO</th>
+			<th>LATITUD</th>
+			<th>LONGITUD</th>
+			<th>FECHA</th>
+			<th>GPS</th>
+			<th>SATELITES</th>
+			<th>GSM</th>
+			<th>VELOCIDAD</th>
+			<th>HEADING</th>
+			<th>HDOP</th>
+			<th>ALTITUD</th>
+			<th>ODOMETRO</th>
+			<th>HOROMETRO</th>
+			<th>MAPA</th>
+		</tr>
+		
+		<%
+		SimpleDateFormat oldDf = new SimpleDateFormat("yyMMddHHmmss");
+		SimpleDateFormat newDf = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+		ArrayList<DatosTramaGetSet> lista = (ArrayList<DatosTramaGetSet>)session.getAttribute("listaDatos");
+		System.out.println(lista);
+		int i = 0;
+		for(DatosTramaGetSet obj: lista){
+			i++;
+			Date fecha = oldDf.parse(obj.getFecha());
+			%>
+			<tr>
+				<td><%=i %></td>
+				<td><%=obj.getImei() %></td>
+				<td><%=obj.getComando() %></td>
+				<td><%=obj.getEvento() %></td>
+				<td><%=obj.getLatitud() %></td>
+				<td><%=obj.getLongitud() %></td>
+				<td><%=newDf.format(fecha) %></td>
+				<td><%=obj.getGps() %></td>
+				<td><%=obj.getSatelites() %></td>
+				<td><%=obj.getGsm() %></td>
+				<td><%=obj.getVelocidad() %></td>
+				<td><%=obj.getHeading() %></td>
+				<td><%=obj.getHdop() %></td>
+				<td><%=obj.getAltitud() %></td>
+				<td><%=obj.getOdometro() %></td>
+				<td><%=obj.getHorometro() %></td>
+				<td>
+					<a onclick="ubicar(<%=obj.getLatitud() %>,<%=obj.getLongitud() %>,<%=obj.getFecha() %>,<%=obj.getVelocidad() %>)">Ubicar</a>
+				</td>
+			</tr>
+			<%
+		}
+		%>
+	</table>
+	
+</form>
+</body>
+</html>

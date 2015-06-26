@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+	<p>Google Maps</p>
+	<div id="map" style="width: 500px; height: 400px;"></div>
+	
+	<script src="http://maps.google.com/maps/api/js?sensor=false&callback=init"></script>
+	
+	<script type="text/javascript">
+		var map;
+		var place;
+		var marker;
+		var fecha = "25 02 2015";
+		
+		function init() {
+			var mapOptions = {
+				center: new google.maps.LatLng(-12.167778, -77.009881),
+				zoom: 15,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			}
+			map = new google.maps.Map(document.getElementById("map"),mapOptions);
+			
+			place = new google.maps.LatLng(-12.167778, -77.009881);
+			marker = new google.maps.Marker({
+			        position: place,
+			        title: "Detalle de Ubicacion",
+			        map: map,
+			});
+			google.maps.event.addListener(marker, "click", showInfo);
+		}
+
+		function showInfo() {
+				map.setZoom(15);
+				map.setCenter(marker.getPosition());
+				var iw = new google.maps.InfoWindow({
+					content:'<p>Detalles</p>'+
+							'<p>Fecha y Hora: '+ fecha +'</p>'+
+							'<p>Latitud:</p>'+
+							'<p>Longitud:</p><p>Velocidad:</p>'
+				});
+				iw.open(map,marker);
+		}
+		
+	</script>
+	
+</body>
+</html>
